@@ -1,8 +1,9 @@
 package com.assessement.code.account.api;
 
-import com.assessement.code.account.entity.Account;
-import com.assessement.code.account.entity.Transaction;
+import com.assessement.code.account.dto.AccountDto;
+import com.assessement.code.account.dto.AccountTransactionDto;
 import com.assessement.code.account.exception.AccountNotFoundException;
+import com.assessement.code.account.exception.TransactionNotFoundException;
 import com.assessement.code.account.service.AccountService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,33 +18,34 @@ import java.util.List;
 @RequestMapping(value = "/api/v1")
 public class AccountController {
 
-
-    private final AccountService accountsService;
-
     private static final Logger log = LoggerFactory.getLogger(AccountController.class);
+    private final AccountService accountsService;
 
     public AccountController(AccountService accountsService) {
         this.accountsService = accountsService;
     }
 
     @GetMapping(value = "/{customerId}/accounts")
-    public List<Account> getAccountList(@PathVariable("customerId") Long customerId) throws AccountNotFoundException {
-        List<Account> accounts = accountsService.getAllAccountsForCustomer(customerId);
+    public List<AccountDto> getAccountList(@PathVariable("customerId") Long customerId) throws AccountNotFoundException {
+        final List<AccountDto> accounts = accountsService.getAllAccountsForCustomer(customerId);
         if (accounts.isEmpty()) {
-            log.info("No accounts mapped for the user : {}", customerId);
+            log.info("No accounts mapped for the customer : {}", customerId);
             throw new AccountNotFoundException(customerId);
         }
-        log.info("Returning account : {} and size : {}", accounts, accounts.size());
+        log.info("found : {}  account for the customer: {}", accounts.size(), customerId);
         return accounts;
     }
 
     @GetMapping(value = "/{customerId}/accounts/{accountId}/transactions")
-    public List<Transaction> getTransactionsForAccount(@PathVariable("accountId") Long accountId) {
-        List<Transaction> accounts = accountsService.getTransactionsForAccount(accountId);
-        if (accounts.isEmpty()) {
-            log.info("No accounts mapped for the user : {}", accountId);
+    public List<AccountTransactionDto> getTransactionsForAccount(
+            @PathVariable("customerId") Long customerId,
+            @PathVariable("accountId") Long accountId) {
+        final List<AccountTransactionDto> accountTransactions = accountsService.getTransactionsForAccount(customerId, accountId);
+        if (accountTransactions.isEmpty()) {
+            log.info("No transactions available for the account : {}", accountId);
+            throw new TransactionNotFoundException(accountId);
         }
-        log.info("Returning account : {} and size : {}", accounts, accounts.size());
-        return accounts;
+        log.info("Returning transactions list for the account : {}", accountId);
+        return accountTransactions;
     }
 }
