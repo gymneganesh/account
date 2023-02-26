@@ -16,7 +16,7 @@
     http://localhost:9191/swagger-ui/index.html#/account-controller
     
     Sample request 
-        >Account     : http://localhost:9191/api/v1/{customerId}/accounts
+        Account     : http://localhost:9191/api/v1/{customerId}/accounts
                     : http://localhost:9191/api/v1/1001/accounts
 
         Transactions: http://localhost:9191/api/v1/{customerId}/accounts/{accountId}/transactions
