@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Entity
 @Data
@@ -17,6 +18,7 @@ public class Transaction {
 
     @Id
     @Column
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "account_id")
@@ -25,7 +27,8 @@ public class Transaction {
 
     @Column(name = "value_date")
     @NotNull
-    private String date;
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
     @Column
     @Enumerated(EnumType.STRING)
