@@ -11,6 +11,7 @@ spring:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
     username: admin
+    #todo: definitely not a good practise to store password in application ( we can use vault or equivalent service)
     password: admin
 
   jpa:
